@@ -1,0 +1,64 @@
+<html>
+<head>
+    <title>Web scraping</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+
+<body>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            let url;
+
+            // submit search
+            $("#submit").click(function() {
+                $("#result").html("<b>Calculating...</b>");
+                $("#resulttable").html("");
+                query = $("#query").val();
+                url = "http://localhost:5000/" + query;
+                // get data from server
+                $.getJSON(url).done(function(jsondata) {
+                    $("#result").html("Found " + jsondata.amount + " results in " + jsondata.duration + " seconds.");
+                    if (jsondata.data.length > 0) {
+                        res = "<table><tr><td><b>Name</b></td><td><b>Score</b></td><td><b>Content</b></td><td><b>Location</b></td><td><b>PageRank</b></td></tr>";
+                        $.each(jsondata.data, function(key, value) {
+                            res += "<tr><td>" + value[0] + "</td><td>" + value[1] + "</td><td>" + value[2] + "</td><td>" + value[3] + "</td><td>" + value[4] + "</td></tr>"
+                        });
+                        res += "</table>";
+                        $("#resulttable").html(res);
+                    } else {
+                        $("#resulttable").html("");
+                    }
+                });
+            });
+        });
+    </script>
+
+    <!-- Header -->
+    <nav class="navbar navbar-expand-sm navbar-dark bg-dark mb-3">
+        <div class="container">
+            <h2 class="text-light">Web scraping
+                <small class="text-muted">2DV515 Project</small>
+            </h2>
+        </div>
+    </nav>
+
+    <!-- Search container -->
+    <div class="container mt-4">
+        <div id="search">
+            <div class="row mt-2">
+                <div class="col">
+                    <input type="text" placeholder="Enter search query" id="query">
+                </div>
+                <div class="col">
+                    <button type="submit" class="btn btn-sm btn-secondary" id="submit">Get results</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Result container -->
+    <div class="container mt-4" id="result"></div>
+    <div class="container mt-4" id="resulttable"></div>
+</body>
+</html>
