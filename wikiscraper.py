@@ -23,7 +23,7 @@ class WikiScraper:
     def init_dataset(self, title):
         """
         Set wiki page to create dataset and start scraping from,
-        create unneccessary folders.
+        create necessary folders.
 
         Args:
             title (str): title of wiki page
@@ -90,7 +90,7 @@ class WikiScraper:
         # get raw html
         html = self.download_page(self.base_url + page)
 
-        # remove unneccessary parts of html
+        # remove unnecessary parts of html
         start = html.find("<div class=\"mw-parser-output\">")
         notes = html.find("<span class=\"mw-headline\" id=\"Notes\">")
         refs = html.find("<span class=\"mw-headline\" id=\"References\">")
@@ -102,7 +102,7 @@ class WikiScraper:
         # create beautifulsoup object
         soup = bs(html, 'html.parser')
 
-        # remove unneccessary notes
+        # remove unnecessary notes
         for note in soup.findAll("div", {"class": "hatnote"}):
             if note.findAll(text=re.compile('This article is about')):
                 note.decompose()
@@ -122,7 +122,7 @@ class WikiScraper:
         # remove short description
         self.try_decompose(soup, "div", {"class": "shortdescription"})
 
-        # remove unneccessary boxes
+        # remove unnecessary boxes
         for table in soup.findAll("table", {"class": "ambox"}):
             table.decompose()
 
